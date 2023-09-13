@@ -10,8 +10,10 @@ function shuffleAnswers(answers) {
   return shuffledAnswers
 }
 
+
 function Questions({setCategoryId, setCurrentQuestion, currentQuestion}) {
   const [questions, setQuestions] = useState([]);
+
 
   useEffect(() => {
     axios
@@ -36,33 +38,27 @@ function Questions({setCategoryId, setCurrentQuestion, currentQuestion}) {
   }
 
   return (
-    <React.Fragment>
+    <div>
       {questions.map((question, index) => {
-        if (currentQuestion === index) {
-          const shuffledAnswers = shuffleAnswers ([
-            question.correct_answer,
-            ...question.incorrect_answers,
-          ]);
+  if (currentQuestion===index) {
+    // shuffle the answers array
+    const shuffledAnswers = shuffleAnswers ([
+      question.correct_answer,
+      ...question.incorrect_answers,
+    ]);
 
-          return (
-            <div key={index}>
-              <h2>Question: {question.question}</h2>
-              <p>Difficulty: {question.difficulty}</p>
-              {shuffledAnswers.map((answer, answerIndex) => (
-                <button key={answerIndex}>
-                  {answer}
-                </button>
-              ))}
-              <p>{question.correct_answer}</p>
-            </div>
-          );
-        }
-        return null; // Return null for questions that are not the currentQuestion
-      })}
-    </React.Fragment>
-  );
-}
-
-export default Questions;
-
-// when click button update a state with the selection information
+    return (
+      <div key={index}>
+        <h2>Question: {question.question}</h2>
+        <p>Difficulty: {question.difficulty}</p>
+        {/* create separate buttons for correct and incorrect */}
+        {shuffledAnswers.map((answer, answerIndex) => (
+          <button key={answerIndex}>
+            {answerIndex === 0 ? 'Correct: ' : 'Incorrect:'}
+            {answer}
+          </button>
+        ))}
+      </div>
+    );
+  }
+})}
