@@ -12,6 +12,7 @@ function shuffleAnswers(answers) {
 
 function Questions({setCategoryId, setCurrentQuestion, currentQuestion}) {
   const [questions, setQuestions] = useState([]);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
 
   useEffect(() => {
     axios
@@ -29,6 +30,11 @@ function Questions({setCategoryId, setCurrentQuestion, currentQuestion}) {
         console.error('Error fetching questions:', error);
       });
   }, []);
+
+  const handleAnswerClick = (answer) => {
+    setSelectedAnswer(answer);
+    setCurrentQuestion((prevCurrentQuestion) => prevCurrentQuestion + 1);
+  };
 
   // Check if questions is an array before mapping over it
   if (!Array.isArray(questions)) {
@@ -49,7 +55,7 @@ function Questions({setCategoryId, setCurrentQuestion, currentQuestion}) {
               <h2>Question: {question.question}</h2>
               <p>Difficulty: {question.difficulty}</p>
               {shuffledAnswers.map((answer, answerIndex) => (
-                <button key={answerIndex}>
+                <button key={answerIndex} onClick={() => handleAnswerClick(answer)}>
                   {answer}
                 </button>
               ))}
