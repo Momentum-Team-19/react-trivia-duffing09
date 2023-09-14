@@ -13,6 +13,7 @@ function shuffleAnswers(answers) {
 function Questions({setCategoryId, setCurrentQuestion, currentQuestion}) {
   const [questions, setQuestions] = useState([]);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [isAnswerCorrect, setIsAnswerCorrect] = useState(null);
 
   useEffect(() => {
     axios
@@ -33,8 +34,18 @@ function Questions({setCategoryId, setCurrentQuestion, currentQuestion}) {
 
   const handleAnswerClick = (answer) => {
     setSelectedAnswer(answer);
-    setCurrentQuestion((prevCurrentQuestion) => prevCurrentQuestion + 1);
   };
+
+  const handleSubmit = () => {
+    const currentQuestionObj = questions[currentQuestion];
+    if (selectedAnswer === currentQuestionObj.correct_answer) {
+      setIsAnswerCorrect(true);
+      setCurrentQuestion((prevCurrentQuestion) => prevCurrentQuestion + 1);
+      setSelectedAnswer(null);
+    } else {
+      setIsAnswerCorrect(false);
+    }
+  }
 
   // Check if questions is an array before mapping over it
   if (!Array.isArray(questions)) {
@@ -59,6 +70,8 @@ function Questions({setCategoryId, setCurrentQuestion, currentQuestion}) {
                   {answer}
                 </button>
               ))}
+              <button disabled={!selectedAnswer} onClick={handleSubmit}>Submit</button>
+              {isAnswerCorrect === false && <p>❌Wrong, try again!❌</p>}
               <p>{question.correct_answer}</p>
             </div>
           );
