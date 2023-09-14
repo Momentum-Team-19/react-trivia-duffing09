@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
+import he from 'he';
 
 function shuffleAnswers(answers) {
   const shuffledAnswers = [...answers];
@@ -47,30 +48,38 @@ function Questions({setCategoryId, setCurrentQuestion, currentQuestion}) {
     }
   }
 
-  // Check if questions is an array before mapping over it
+  // Check if questions is an array before mapping over it, if not it means api request hasn't completed yet
   if (!Array.isArray(questions)) {
     return <div>Loading...</div>;
   }
 
   return (
+    // using a Fragment to group multiple elements without adding extra nodes to the dom
     <React.Fragment>
+      {/* maps over question array, iterates over each question object in the array and provides anindex for each one */}
       {questions.map((question, index) => {
+        // checks if current index in the questions array matches currentQuestion index
         if (currentQuestion === index) {
+          // if condition is true, proceeds to shuffle answers for current question. calls shuffleAnswers function then passing in an array that includes correct answer and all incorrect ones
           const shuffledAnswers = shuffleAnswers ([
             question.correct_answer,
             ...question.incorrect_answers,
           ]);
-
+// if current question, returns a div element with a unique key attribute set to index. used to efficiently update and manage list of questions
           return (
             <div key={index}>
-              <h2>Question: {question.question}</h2>
+              {/* displaying question and difficulty */}
+              <h2>Question: {he.decode(question.question)}</h2>
               <p>Difficulty: {question.difficulty}</p>
+              {/* maps over shuffledAnswers and generates a set of buttons for each answer. each button has a key attribute set to answerIndex and an onClick that calls handleAnswerClick when answer is clicked */}
               {shuffledAnswers.map((answer, answerIndex) => (
                 <button key={answerIndex} onClick={() => handleAnswerClick(answer)}>
                   {answer}
                 </button>
               ))}
+              {/* displays a submit button. button is disabled if selectedAnswer is null. uses handleSubmit function */}
               <button disabled={!selectedAnswer} onClick={handleSubmit}>Submit</button>
+              {/* displays a message if isAnswerCorrect is false */}
               {isAnswerCorrect === false && <p>❌Wrong, try again!❌</p>}
               <p>{question.correct_answer}</p>
             </div>
