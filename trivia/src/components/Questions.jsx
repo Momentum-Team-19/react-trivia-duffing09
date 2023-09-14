@@ -15,6 +15,10 @@ function Questions({setCategoryId, setCurrentQuestion, currentQuestion}) {
   const [questions, setQuestions] = useState([]);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [isAnswerCorrect, setIsAnswerCorrect] = useState(null);
+  const [score, setScore] = useState(0);
+  const [results, setResults] = useState([]);
+  const [correctAnswers, setCorrectAnswers] = useState(0);
+  const [wrongAnswers, setWrongAnswers] = useState(0)
 
   useEffect(() => {
     axios
@@ -43,8 +47,16 @@ function Questions({setCategoryId, setCurrentQuestion, currentQuestion}) {
       setIsAnswerCorrect(true);
       setCurrentQuestion((prevCurrentQuestion) => prevCurrentQuestion + 1);
       setSelectedAnswer(null);
+      setScore((prevScore) => prevScore + 1);
+      setCorrectAnswers((prevCorrectAnswers) => prevCorrectAnswers + 1);
+      setResults((prevResults) => [...prevResults, { question: currentQuestionObj.question, correct: true }]);
     } else {
       setIsAnswerCorrect(false);
+      setWrongAnswers((prevWrongAnswers) => prevWrongAnswers + 1);
+      setResults((prevResults) => [
+        ...prevResults,
+        { question: currentQuestionObj.question, correct: false }
+      ])
     }
   }
 
@@ -82,6 +94,8 @@ function Questions({setCategoryId, setCurrentQuestion, currentQuestion}) {
               {/* displays a message if isAnswerCorrect is false */}
               {isAnswerCorrect === false && <p>❌Wrong, try again!❌</p>}
               <p>{question.correct_answer}</p>
+              <p>Correct Answers: {correctAnswers}</p>
+              <p>Wrong Answers: {wrongAnswers}</p>
             </div>
           );
         }
