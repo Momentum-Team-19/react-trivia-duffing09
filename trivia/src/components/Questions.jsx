@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import he from 'he';
 
+
 function shuffleAnswers(answers) {
   const shuffledAnswers = [...answers];
   for (let i = shuffledAnswers.length -1; i > 0; i--) {
@@ -12,6 +13,7 @@ function shuffleAnswers(answers) {
 }
 
 function Questions({setCategoryId, setCurrentQuestion, currentQuestion}) {
+  const [showCategories, setShowCategories] = useState(false);
   const [questions, setQuestions] = useState([]);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [isAnswerCorrect, setIsAnswerCorrect] = useState(null);
@@ -37,27 +39,53 @@ function Questions({setCategoryId, setCurrentQuestion, currentQuestion}) {
       });
   }, []);
 
+
   const handleAnswerClick = (answer) => {
     setSelectedAnswer(answer);
   };
 
   const handleSubmit = () => {
     const currentQuestionObj = questions[currentQuestion];
+    let correct = false;
     if (selectedAnswer === currentQuestionObj.correct_answer) {
       setIsAnswerCorrect(true);
-      setCurrentQuestion((prevCurrentQuestion) => prevCurrentQuestion + 1);
-      setSelectedAnswer(null);
       setScore((prevScore) => prevScore + 1);
       setCorrectAnswers((prevCorrectAnswers) => prevCorrectAnswers + 1);
-      setResults((prevResults) => [...prevResults, { question: currentQuestionObj.question, correct: true }]);
+      correct = true;
     } else {
       setIsAnswerCorrect(false);
       setWrongAnswers((prevWrongAnswers) => prevWrongAnswers + 1);
-      setResults((prevResults) => [
-        ...prevResults,
-        { question: currentQuestionObj.question, correct: false }
-      ])
     }
+    setResults((prevResults) => [
+      ...prevResults,
+      { question: currentQuestionObj.question, correct: correct }
+    ]);
+    setCurrentQuestion((prevCurrentQuestion) => prevCurrentQuestion + 1);
+    setSelectedAnswer(null);
+  }
+
+  const handleBackToCatClick = () => {
+    setShowCategories(true);
+  }
+
+  if (currentQuestion === questions.length) {
+    return (
+      <div className="final-results">
+        <h2>Quiz Completed</h2>
+        <p>Your final score is: {score}/10</p>
+        <h3>Results:</h3>
+        <ul>
+          {results.map((result, index) => (
+            <li key={index}>
+              <p>Question: {result.qustion}</p>
+              <p>Correct: {result.correct ? 'Yes' : 'No'}</p>
+            </li>
+          )
+          )}
+        </ul>
+        <button onClick={handleBackToCatClick}>Back to Categories</button>
+      </div>
+    )
   }
 
   // Check if questions is an array before mapping over it, if not it means api request hasn't completed yet
@@ -79,7 +107,7 @@ function Questions({setCategoryId, setCurrentQuestion, currentQuestion}) {
           ]);
 // if current question, returns a div element with a unique key attribute set to index. used to efficiently update and manage list of questions
           return (
-            <div key={index}>
+            <div key={index} className="question">
               {/* displaying question and difficulty */}
               <h2>Question: {he.decode(question.question)}</h2>
               <p>Difficulty: {question.difficulty}</p>
@@ -90,12 +118,12 @@ function Questions({setCategoryId, setCurrentQuestion, currentQuestion}) {
                 </button>
               ))}
               {/* displays a submit button. button is disabled if selectedAnswer is null. uses handleSubmit function */}
-              <button disabled={!selectedAnswer} onClick={handleSubmit}>Submit</button>
+              <div><button className="submit-button" disabled={!selectedAnswer} onClick={handleSubmit}>Submit</button></div>
               {/* displays a message if isAnswerCorrect is false */}
-              {isAnswerCorrect === false && <p>❌Wrong, try again!❌</p>}
+              {isAnswerCorrect === false && <p className="message">❌Wrong, do better on this one!❌</p>}
               <p>{question.correct_answer}</p>
-              <p>Correct Answers: {correctAnswers}</p>
-              <p>Wrong Answers: {wrongAnswers}</p>
+              <p className="score">✅: {correctAnswers}</p>
+              <p className="score">❌: {wrongAnswers}</p>
             </div>
           );
         }

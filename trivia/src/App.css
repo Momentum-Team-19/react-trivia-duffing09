@@ -1,42 +1,97 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+/* Questions.css */
+
+.question-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh; /* Ensures the container takes at least the full viewport height */
+  max-width: 100%;
+}
+
+.question {
   text-align: center;
+  border: 1px solid #ccc;
+  padding: 20px;
+  background-color: #f9f9f9;
+  /* max-width: 500px; Set a max width for better readability */
+  color: black;
+  width: 100%;
+  max-height: 100%;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.question h2 {
+  font-size: 1.2em;
+  margin-bottom: 10px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.question p {
+  font-size: 1em;
+  margin: 5px 0;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.question button {
+  display: block;
+  margin: 5px 0;
+  padding: 10px;
+  width: 100%;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
 }
 
-.card {
-  padding: 2em;
+.question button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
-.read-the-docs {
-  color: #888;
+.message {
+  color: red;
+  font-weight: bold;
 }
+
+.score {
+  font-weight: bold;
+  color: black;
+}
+
+.submit-button {
+  background-color: green;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: green;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+button:hover {
+  border-color: #64;
+  background-color: grey;
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+a:hover {
+  color: #747bff;
+}
+button {
+  background-color: #f9f9f9;
+}
+
+.final-results {
+  color: black;
+}
+
+
+
